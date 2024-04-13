@@ -275,10 +275,6 @@ namespace SortingLibraryTests
 			int selected = 4;
 			Sorter<int>.SelectionSwap(input, indexA, ref selected);
 		}
-
-
-
-
 	}
 }
 

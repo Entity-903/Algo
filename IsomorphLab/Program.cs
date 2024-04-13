@@ -19,7 +19,7 @@ namespace IsomorphLab
             try
             {
                 string[] lines = File.ReadAllLines(path);
-                output = IsomorphGenerator.Create(lines);
+                output = IsomorphGenerator.CreateIsomorphs(lines);
             }
             catch (Exception ex)
             {

@@ -21,6 +21,32 @@ namespace SortingLibrary
 		*/
 		public static void BubbleSort(T[] arr)
 		{
+			int value = 1;
+			int otherValue = 1;
+			string thisKey = "thisOne";
+			string otherKey = "otherOne";
+			string alternateKey = "alternateOne";
+			Dictionary<string, int> dictionary1 = new Dictionary<string, int>();
+			Dictionary<string, int> dictionary2 = new Dictionary<string, int>();
+			
+			dictionary1.ContainsKey(thisKey);
+			dictionary1[thisKey] = value;
+			
+			dictionary2.ContainsKey(thisKey);
+			dictionary2[thisKey] = value;
+			dictionary2.ContainsKey(otherKey);
+			dictionary2[otherKey] = otherValue;
+			dictionary2.ContainsKey(alternateKey);
+			dictionary2[alternateKey] = otherValue;
+
+
+			dictionary1.ContainsValue(dictionary1[thisKey]);
+			//dictionary1.Keys.Where("value", true); //Keys.ToList();
+			//foreach (string key in dictionary1.Keys.ToArray()) 
+			//{ 
+				
+			//}
+
 			bool hasChanged = false;
 			do
 			{
@@ -47,7 +73,6 @@ namespace SortingLibrary
 		public static void InsertionSort(T[] arr)
 		{
 			//int[] numbers = { 5, 2, 3, 1, 4 };
-
 			for (int i = 1; i < arr.Length; i++)
 			{
 				T insertedValue = arr[i];
