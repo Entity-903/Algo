@@ -14,7 +14,8 @@ namespace IsomorphLab
 		{
 			Dictionary<string, string> exactIsomorphsDictionary = new Dictionary<string, string>(); //to store exact isomorphic values;
 			Dictionary<string, string> looseIsomorphsDictionary = new Dictionary<string, string>();// to store loose isomorphic values;
-			List<string> nonIsomorphs;  // stores non-isomorphic words
+			List<string> nonIsomorphs = new List<string>();  // stores non-isomorphic words
+			List<string> allIsomorphicValues;  // stores all loose isomorphic values
 
 			// Fills the isomorphic dictionaries with every word and respective isomorphic value
 			for (int i = 0; i < words.Count(); i++)
@@ -24,7 +25,25 @@ namespace IsomorphLab
 				looseIsomorphsDictionary.ContainsKey(words.ElementAt(i));
 				looseIsomorphsDictionary[words.ElementAt(i)] = CalculateLooseIsomorphicValue(words.ElementAt(i));
 			}
-			nonIsomorphs = looseIsomorphsDictionary.Keys.Distinct().ToList();
+			allIsomorphicValues = looseIsomorphsDictionary.Values.ToList();
+			int numberOfOccurrences = 0;
+			foreach (string key in looseIsomorphsDictionary.Keys.ToArray())
+			{
+				for (int i = 0; i < allIsomorphicValues.Count(); i++)
+				{
+					if (looseIsomorphsDictionary[key] == allIsomorphicValues[i])
+					{
+						numberOfOccurrences++;
+						if (numberOfOccurrences > 1)
+						{
+							break;
+						}
+					}
+				}
+				if (numberOfOccurrences == 1) nonIsomorphs.Add(looseIsomorphsDictionary[key]);
+			}
+
+			//nonIsomorphs
 			for (int i = 0; i < nonIsomorphs.Count(); i++)
 			{
 				looseIsomorphsDictionary.Remove(nonIsomorphs[i]);
@@ -33,25 +52,64 @@ namespace IsomorphLab
 
 			// display keys with identical isomorphic values
 			string isomorphs = "Exact Isomorphs:\n";
-			foreach (string key in exactIsomorphsDictionary.Keys.ToArray())
+			string[] exactValues = exactIsomorphsDictionary.Values.ToArray();
+			string[] exactKeys = exactIsomorphsDictionary.Keys.ToArray();
+			string[] looseValues = looseIsomorphsDictionary.Values.ToArray();
+			string[] looseKeys = looseIsomorphsDictionary.Keys.ToArray();
+			for (int i = 0; i < exactKeys.Length; i++)
 			{
-				string isomorphicValue = exactIsomorphsDictionary[key];
-				if (exactIsomorphsDictionary.ContainsValue(isomorphicValue))
+				// isomorphs are stored as values while words are stored as keys
+				// how do we compare values of key/value pairs?
+				// furthermore, how do we obtain the key(s) that point to that value?
+				string isomorphicValue = exactValues[i];
+				isomorphs += isomorphicValue + ": ";
+				for (int j = 0; j < exactValues.Length; j++) 
 				{
-					// For every unique isomorph
-					// Concatenate to variable isomorphs as follows:
-					// Exact Isomorphs:\n
-					// <isomorphicValue>: <key>, <key>, <key> ... \n
-					// <isomorphicValue>: ... \n
-					// ... \n
-					// \n
-					// Loose Isomorphs:\n
-					// <isomorphicValue>: <key>, <key>, <key> ... \n
-					// <isomorphicValue>: ... \n
-					// ... \n
-					// Non-Isomorphs:\n
-					// <key>, <key>, <key> ...
+					if (exactValues[j] == isomorphicValue)
+					{
+							isomorphs += exactKeys[j] + " ";
+							exactIsomorphsDictionary.Remove(exactKeys[j]);
+                    }
 				}
+				isomorphs += "\n";
+				// For every unique isomorph
+				// Concatenate to variable, isomorphs, as follows:
+				// Exact Isomorphs:\n
+				// <isomorphicValue>: <key>, <key>, <key> ... \n
+				// <isomorphicValue>: ... \n
+				// ... \n
+				// \n
+				// Loose Isomorphs:\n
+				// <isomorphicValue>: <key>, <key>, <key> ... \n
+				// <isomorphicValue>: ... \n
+				// ... \n
+				// Non-Isomorphs:\n
+				// <key>, <key>, <key> ...
+
+				// As the string is formed, remove used keys from its respective dictionary
+			}
+			isomorphs += "\n\nLoose Isomorphs:\n";
+			for (int i = 0; i < looseKeys.Length; i++)
+			{
+				// isomorphs are stored as values while words are stored as keys
+				// how do we compare values of key/value pairs?
+				// furthermore, how do we obtain the key(s) that point to that value?
+				string isomorphicValue = looseValues[i];
+				isomorphs += isomorphicValue + ": ";
+				for (int j = 0; j < looseValues.Length; j++)
+				{
+					if (looseValues[j] == isomorphicValue)
+					{
+							isomorphs += looseKeys[j];
+							//looseIsomorphsDictionary.Remove(looseKeys[i]);
+					}
+				}
+				isomorphs += "\n";
+			}
+			isomorphs += "\n\nNon Isomorphs: ";
+			for (int i = 0; i < nonIsomorphs.Count(); i++)
+			{
+					isomorphs += nonIsomorphs[i] + " ";
 			}
 
 			return isomorphs;
