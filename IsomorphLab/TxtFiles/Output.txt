@@ -21,25 +21,25 @@ Exact Isomorphs:
 
 
 Loose Isomorphs:
-3 : aaa
-1 1 1 1 : fear
-1 1 1 1 1 : mates
-1 2 : gageggaddfooyaytot
-1 2 : gageggaddfooyaytot
-1 2 : gageggaddfooyaytot
-1 2 : gageggaddfooyaytot
-1 1 1 : sapatebareatfit
-1 2 : gageggaddfooyaytot
-1 2 : gageggaddfooyaytot
-1 1 2 : lookmeettookseerseep
-1 1 2 : lookmeettookseerseep
-1 1 2 : lookmeettookseerseep
-1 1 2 : lookmeettookseerseep
-1 1 2 : lookmeettookseerseep
-1 1 1 : sapatebareatfit
-1 1 1 : sapatebareatfit
-1 1 1 : sapatebareatfit
-1 1 1 : sapatebareatfit
+3 : aaa 
+1 1 1 1 : fear 
+1 1 1 1 1 : mates 
+1 2 : gag egg add foo yay tot 
+1 2 : gag egg add foo yay tot 
+1 2 : gag egg add foo yay tot 
+1 2 : gag egg add foo yay tot 
+1 1 1 : sap ate bar eat fit 
+1 2 : gag egg add foo yay tot 
+1 2 : gag egg add foo yay tot 
+1 1 2 : look meet took seer seep 
+1 1 2 : look meet took seer seep 
+1 1 2 : look meet took seer seep 
+1 1 2 : look meet took seer seep 
+1 1 2 : look meet took seer seep 
+1 1 1 : sap ate bar eat fit 
+1 1 1 : sap ate bar eat fit 
+1 1 1 : sap ate bar eat fit 
+1 1 1 : sap ate bar eat fit 
 
 
 Non Isomorphs: 3  

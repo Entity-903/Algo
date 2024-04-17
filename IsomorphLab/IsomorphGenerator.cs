@@ -100,7 +100,7 @@ namespace IsomorphLab
 				{
 					if (looseValues[j] == isomorphicValue)
 					{
-							isomorphs += looseKeys[j];
+							isomorphs += looseKeys[j] + " ";
 							//looseIsomorphsDictionary.Remove(looseKeys[i]);
 					}
 				}
