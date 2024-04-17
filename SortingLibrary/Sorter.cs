@@ -28,10 +28,10 @@ namespace SortingLibrary
 			string alternateKey = "alternateOne";
 			Dictionary<string, int> dictionary1 = new Dictionary<string, int>();
 			Dictionary<string, int> dictionary2 = new Dictionary<string, int>();
-			
+
 			dictionary1.ContainsKey(thisKey);
 			dictionary1[thisKey] = value;
-			
+
 			dictionary2.ContainsKey(thisKey);
 			dictionary2[thisKey] = value;
 			dictionary2.ContainsKey(otherKey);
@@ -44,7 +44,7 @@ namespace SortingLibrary
 			//dictionary1.Keys.Where("value", true); //Keys.ToList();
 			//foreach (string key in dictionary1.Keys.ToArray()) 
 			//{ 
-				
+
 			//}
 
 			bool hasChanged = false;
@@ -126,5 +126,35 @@ namespace SortingLibrary
 			arr[index] = selected;
 			selected = temp;
 		}
+
+		public static int BinarySearch(T searchValue, T[] arr, int rangeStart, int rangeEnd) // 13
+		{
+			int range = rangeEnd - rangeStart;
+			int middleValueIndex = rangeStart + (rangeEnd - rangeStart) / 2; // 4
+			T middleValue = arr[middleValueIndex]; // 1
+			if (range < 0) return -1;
+			if (range == 0) // 1
+			{
+				if (!(middleValue.Equals(searchValue))) // 1
+				{
+					return -1;
+				}
+			}
+
+			if (middleValue.Equals(searchValue)) // 1
+			{
+				return middleValueIndex;
+			}
+			else if (middleValue.CompareTo(searchValue) > 0) // 1
+			{
+				int newRangeEnd = middleValueIndex - 1; // 2
+				return BinarySearch(searchValue, arr, rangeStart, newRangeEnd);
+			}
+			else
+			{
+				int newRangeStart = middleValueIndex + 1; // 2
+				return BinarySearch(searchValue, arr, newRangeStart, rangeEnd);
+			}
+		} // O(log(n))
 	}
 }

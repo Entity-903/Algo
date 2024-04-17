@@ -275,6 +275,64 @@ namespace SortingLibraryTests
 			int selected = 4;
 			Sorter<int>.SelectionSwap(input, indexA, ref selected);
 		}
+		//------------------------------------------------
+		[TestMethod]
+		public void Test_BinarySearch_HappyPath()
+		{
+			int[] input = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+			int searchValue = 2;
+			int expectedOutput = 1;
+			int rangeStart = 0;
+			int rangeEnd = 9;
+			Assert.IsTrue(Sorter<int>.BinarySearch(searchValue, input, rangeStart, rangeEnd) == expectedOutput);
+		}
+
+		[TestMethod]
+		public void Test_BinarySearch_NotInCollection()
+		{
+			int[] input = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+			int searchValue = 17;
+			int expectedOutput = -1;
+			int rangeStart = 0;
+			int rangeEnd = 9;
+			Assert.IsTrue(Sorter<int>.BinarySearch(searchValue, input, rangeStart, rangeEnd) == expectedOutput);
+		}
+
+		[TestMethod,
+		ExpectedException(typeof(NullReferenceException))]
+		public void Test_BinarySearch_NullCollection()
+		{
+			int[] input = null;
+			int searchValue = 5;
+			int rangeStart = 0;
+			int rangeEnd = 9;
+			Sorter<int>.BinarySearch(searchValue, input, rangeStart, rangeEnd);
+		}
+
+		[TestMethod]
+		public void Test_BinarySearch_EndBeforeStart()
+		{
+			// The failsafe of -1 is in place because, otherwise, the function will call itself infinitely,
+			// with rangeEnd being stuck on 7 and rangeStart stuck on 9, not only searching in the opposite
+			// direction of the searchValue, but never reaching any return statement
+			int[] input = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+			int searchValue = 2;
+			int rangeStart = 9;
+			int rangeEnd = 0;
+			int expectedOutput = -1;
+			Assert.IsTrue(Sorter<int>.BinarySearch(searchValue, input, rangeStart, rangeEnd) == expectedOutput);
+		}
+
+		[TestMethod,
+		ExpectedException(typeof(IndexOutOfRangeException))]
+		public void Test_BinarySearch_RangeValuesOutOfBounds()
+		{
+			int[] input = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+			int searchValue = 2;
+			int rangeStart = 25;
+			int rangeEnd = 50;
+			Sorter<int>.BinarySearch(searchValue, input, rangeStart, rangeEnd);
+		}
 	}
 }
 
