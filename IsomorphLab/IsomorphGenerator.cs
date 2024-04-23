@@ -115,6 +115,35 @@ namespace IsomorphLab
 			return isomorphs;
 		}
 
+		// Returns a cipher where a sentence is referenced to produce the encryption
+		// The easiest way to decrypt an encoded message is to possess the key
+		public static string GenerateIsomorphicCipher(string encryption)
+		{
+			Dictionary<string, uint> conversion = new Dictionary<string, uint>();
+			List<string> letters;
+			List<uint> numbers;
+			uint uniqueCharacter = 1;
+			// fills the local dictionary with every unique character along with an associated value
+			for (int i = 0; i < encryption.Length; i++)
+			{
+				// Check if character is unique and not a whitespace character
+				if ((!conversion.ContainsKey(encryption[i].ToString().ToUpperInvariant())) && encryption[i].ToString() != " ")
+				{
+					// add character to the dictionary with unique value
+					conversion[encryption[i].ToString().ToUpperInvariant()] = uniqueCharacter++;
+				}
+			}
+
+			letters = conversion.Keys.ToList();
+			numbers = conversion.Values.ToList();
+			string cipher = "Key = " + encryption + "\n\n";
+			for (int i = 0; i < letters.Count(); i++)
+			{
+				cipher += letters[i].ToString() + " = " + numbers[i].ToString() + "\n";
+			}
+			return cipher;
+		}
+
 		public static string CalculateLooseIsomorphicValue(string input)
 		{
 			Dictionary<char, uint> tempDictionary = new Dictionary<char, uint>();

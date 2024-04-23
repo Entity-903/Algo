@@ -7,6 +7,7 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Xml.Linq;
 using System.Reflection;
 
+
 namespace SortingLibrary
 {
 	public class Sorter<T> where T : IComparable<T>
@@ -119,7 +120,6 @@ namespace SortingLibrary
 			}
 		} // O(n^2) due to a for loop within a for loop
 
-
 		public static void SelectionSwap(T[] arr, int index, ref T selected)
 		{
 			T temp = arr[index];
@@ -156,5 +156,249 @@ namespace SortingLibrary
 				return BinarySearch(searchValue, arr, newRangeStart, rangeEnd);
 			}
 		} // O(log(n))
+
+		// It would appear that the quicksort algorithm is just wrong...
+		public static void QuickSort(T[] arr, int partitionStart, int partitionEnd)
+		{
+			// End result of the first QuickSort should proceed as follows:
+			// { 8, 5, 7, 6, 1, 4, 2, 3} correct
+			//   ^        ^           ^
+			// { 3, 5, 7, 6, 1, 4, 2, 8} correct
+			//   ^        ^           ^
+			// { 3, 5, 7, 6, 1, 4, 2, 8}
+			//         ^  ^        ^
+			// { 3, 5, 2, 6, 1, 4, 7, 8}
+			//         ^  ^        ^
+			// { 3, 5, 2, 6, 1, 4, 7, 8}
+			//            ^     ^
+			// { 3, 5, 2, 4, 1, 6, 7, 8}
+			//            ^     ^
+
+			int pivotIndex = ChoosePivot(arr, partitionStart, partitionEnd);
+			int currentRightIndex = partitionEnd;
+			bool swapLeftMade = false;
+
+			for (int i = partitionStart; i < pivotIndex; i++) // Elements before pivot
+			{
+				// consider adding more to this if statement.
+				// if arr[i] is less than arr[pivotIndex], proceed (i++) until we find an element less than arr[pivotIndex]
+				if (arr[i].CompareTo(arr[pivotIndex]) > 0)
+				{
+					swapLeftMade = true;
+					bool swapRightMade = false;
+					for (int j = currentRightIndex; j > pivotIndex; j--) // Elements after pivot
+					{
+						if (arr[j].CompareTo(arr[pivotIndex]) < 0)
+						{
+							Swap(arr, i, j);
+							swapRightMade = true;
+							currentRightIndex = j - 1;
+							break;
+						}
+					}
+					if (!swapRightMade)
+					{
+						// Swap left side with pivot if no right element satifies the condition
+						Swap(arr, i, pivotIndex);
+
+					}
+				}
+
+			} // end of for loop
+			// check to ensure that:
+			// we have a right element less than the pivot, but no left elements greater than the pivot
+			if (!swapLeftMade)
+			{
+				for (int j = currentRightIndex; j > pivotIndex; j--) // Elements after pivot
+				{
+					if (arr[j].CompareTo(arr[pivotIndex]) < 0)
+					{
+						Swap(arr, pivotIndex, j);
+					}
+				}
+			}
+
+			if (partitionEnd - partitionStart <= 1)
+			{
+				return;
+			}
+
+			// QuickSort the left of the pivot
+			QuickSort(arr, partitionStart, pivotIndex - 1);
+			// Quicksort the right of the pivot
+			QuickSort(arr, pivotIndex + 1, partitionEnd);
+
+			Console.WriteLine(arr);
+		}
+
+		// ChoosePivot should not cause any issues. Problems are likely due to QuickSort
+		public static int ChoosePivot(T[] arr, int partitionStart, int partitionEnd)
+		{
+			int middleElementIndex = partitionEnd / 2;
+			int firstElementIndex = partitionStart;
+			int lastElementIndex = partitionEnd;
+			T maxValue;
+			T minValue;
+			T destinedPivotValue;
+
+			// find maxValue
+			if (arr[firstElementIndex].CompareTo(arr[middleElementIndex]) > 0)
+			{
+				if (arr[firstElementIndex].CompareTo(arr[lastElementIndex]) > 0)
+				{
+					maxValue = arr[firstElementIndex];
+				}
+				else
+				{
+					maxValue = arr[lastElementIndex];
+				}
+			}
+			else
+			{
+				if (arr[middleElementIndex].CompareTo(arr[lastElementIndex]) > 0)
+				{
+					maxValue = arr[middleElementIndex];
+				}
+				else
+				{
+					maxValue = arr[lastElementIndex];
+				}
+			}
+
+			// int[] numbers = { 8, 5, 7, 6, 1, 4, 2, 3};
+			//                   ^        ^           ^
+
+			// find minValue and destinedPivotValue excluding maxValue
+			if (maxValue.Equals(arr[lastElementIndex]))
+			{
+				if (arr[firstElementIndex].CompareTo(arr[middleElementIndex]) < 0)
+				{
+					minValue = arr[firstElementIndex];
+					destinedPivotValue = arr[middleElementIndex];
+				}
+				else
+				{
+					minValue = arr[middleElementIndex];
+					destinedPivotValue = arr[firstElementIndex];
+				}
+			} else if (maxValue.Equals(arr[middleElementIndex]))
+			{
+				if (arr[firstElementIndex].CompareTo(arr[lastElementIndex]) < 0)
+				{
+					minValue = arr[firstElementIndex];
+					destinedPivotValue = arr[lastElementIndex];
+				}
+				else
+				{
+					minValue = arr[lastElementIndex];
+					destinedPivotValue = arr[firstElementIndex];
+				}
+			}
+			else 
+			{
+				if (arr[middleElementIndex].CompareTo(arr[lastElementIndex]) < 0)
+				{
+					minValue = arr[middleElementIndex];
+					destinedPivotValue = arr[lastElementIndex];
+				}
+				else
+				{
+					minValue = arr[lastElementIndex];
+					destinedPivotValue = arr[middleElementIndex];
+				}
+			}
+
+			arr[firstElementIndex] = minValue;
+			arr[lastElementIndex] = maxValue;
+			arr[middleElementIndex] = destinedPivotValue;
+			return middleElementIndex;
+		}
+
+		public static void MergeSort(ref T[] arr)
+		{ 
+			// { 3, 2, 1 }
+			// { (3), 2, 1 }
+			// { 3 }, { 2, 1 }
+			// { 3 }, { 2 }, { 1 }
+			// { 3 }, { 1, 2 }
+			// { 1, 2, 3 }
+			
+			if (arr.Length > 1)
+			{
+				int middleIndex = (arr.Length) / 2; // Don't subtract one from arr.Length! // 1
+				T[] firstHalf = new T[middleIndex]; // 1
+				T[] secondHalf = new T[arr.Length - middleIndex]; // 1
+
+				for (int i = 0; i < arr.Length; i++)
+				{
+					if (i < middleIndex)
+					{
+						firstHalf[i] = arr[i];
+					}
+					else
+					{
+						secondHalf[i - middleIndex] = arr[i];
+					}
+				}
+
+				MergeSort(ref firstHalf);
+				MergeSort(ref secondHalf);
+
+				arr = Merge(firstHalf, secondHalf);
+			}
+			else
+			{ 
+				// errors on 8th continue
+				// I don't think we are merging the pieces back together
+				// Actually, it appears that the values aren't sorted at all, how?
+				// It would appear that we never return the mergedCollection, which never updates the original array
+				return;
+			}
+		}
+
+		public static T[] Merge(T[] firstHalf, T[] secondHalf)
+		{
+			T[] mergedCollection = new T[firstHalf.Length + secondHalf.Length];
+			int firstHalfTracker = 0;
+			int secondHalfTracker = 0;
+
+			for (int i = 0; i < mergedCollection.Length; i++)
+			{
+				if (firstHalfTracker != firstHalf.Length)
+				{
+					if (secondHalfTracker != secondHalf.Length)
+					{
+						if (firstHalf[firstHalfTracker].CompareTo(secondHalf[secondHalfTracker]) < 0)
+						{
+							mergedCollection[i] = firstHalf[firstHalfTracker];
+							firstHalfTracker++;
+
+						}
+						else
+						{
+							mergedCollection[i] = secondHalf[secondHalfTracker];
+							secondHalfTracker++;
+						}
+					}
+					else
+					{
+						for (int j = firstHalfTracker; j < firstHalf.Length; j++)
+						{
+							mergedCollection[i++] = firstHalf[j];
+						}
+						break;
+					}
+				}
+				else
+				{
+					for (int j = secondHalfTracker; j < secondHalf.Length; j++)
+					{
+						mergedCollection[i++] = secondHalf[j];
+					}
+					break;
+				}
+			}
+			return mergedCollection;
+		}
 	}
 }

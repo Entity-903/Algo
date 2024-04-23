@@ -333,6 +333,24 @@ namespace SortingLibraryTests
 			int rangeEnd = 50;
 			Sorter<int>.BinarySearch(searchValue, input, rangeStart, rangeEnd);
 		}
+		//------------------------------------------------
+		[TestMethod]
+		public void Test_QuickSort_HappyPath()
+		{
+			int[] input = { 3, 48, 17, 30, 12, 9 }; // { 8, 5, 7, 6, 1, 4, 2, 3 } // { 3, 48, 17, 30, 12, 9 }
+			int[] expectedOutput = { 3, 9, 12, 17, 30, 48 }; // { 1, 2, 3, 4, 5, 6, 7, 8 } // { 3, 9, 12, 17, 30, 48 }
+			Sorter<int>.QuickSort(input, 0, input.Length - 1);
+			Assert.IsTrue(input.SequenceEqual(expectedOutput));
+		}
+
+		[TestMethod]
+		public void Test_MergeSort_HappyPath()
+		{
+			int[] input = { 8, 5, 7, 6, 1, 4, 2, 3 };
+			int[] expectedOutput = { 1, 2, 3, 4, 5, 6, 7, 8 };
+			Sorter<int>.MergeSort(ref input);
+			Assert.IsTrue(input.SequenceEqual(expectedOutput));
+		}
 	}
 }
 
