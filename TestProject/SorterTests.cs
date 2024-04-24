@@ -337,8 +337,43 @@ namespace SortingLibraryTests
 		[TestMethod]
 		public void Test_QuickSort_HappyPath()
 		{
-			int[] input = { 3, 48, 17, 30, 12, 9 }; // { 8, 5, 7, 6, 1, 4, 2, 3 } // { 3, 48, 17, 30, 12, 9 }
-			int[] expectedOutput = { 3, 9, 12, 17, 30, 48 }; // { 1, 2, 3, 4, 5, 6, 7, 8 } // { 3, 9, 12, 17, 30, 48 }
+			int[] input = { 8, 5, 7, 6, 1, 4, 2, 3 }; // { 8, 5, 7, 6, 1, 4, 2, 3 } // { 3, 48, 17, 30, 12, 9 }
+			int[] expectedOutput = { 1, 2, 3, 4, 5, 6, 7, 8 }; // { 1, 2, 3, 4, 5, 6, 7, 8 } // { 3, 9, 12, 17, 30, 48 }
+			Sorter<int>.QuickSort(input, 0, input.Length - 1);
+			Assert.IsTrue(input.SequenceEqual(expectedOutput));
+		}
+
+		[TestMethod,
+		ExpectedException(typeof(NullReferenceException))]
+		public void Test_QuickSort_NullCollection()
+		{
+			int[] input = null;
+			Sorter<int>.QuickSort(input, 0, input.Length - 1);
+		}
+
+		[TestMethod]
+		public void Test_QuickSort_DuplicateValues()
+		{
+			int[] input = { 0, 1, 0, 1, 0, 1, 0, 1 };
+			int[] expectedOutput = { 0, 0, 0, 0, 1, 1, 1, 1 };
+			Sorter<int>.QuickSort(input, 0, input.Length - 1);
+			Assert.IsTrue(input.SequenceEqual(expectedOutput));
+		}
+
+		[TestMethod]
+		public void Test_QuickSort_OneElement()
+		{
+			int[] input = { 9 };
+			int[] expectedOutput = { 9 };
+			Sorter<int>.QuickSort(input, 0, input.Length - 1);
+			Assert.IsTrue(input.SequenceEqual(expectedOutput));
+		}
+
+		[TestMethod]
+		public void Test_QuickSort_TwoElements()
+		{
+			int[] input = { 4, 2 };
+			int[] expectedOutput = { 2, 4 };
 			Sorter<int>.QuickSort(input, 0, input.Length - 1);
 			Assert.IsTrue(input.SequenceEqual(expectedOutput));
 		}
@@ -351,6 +386,43 @@ namespace SortingLibraryTests
 			Sorter<int>.MergeSort(ref input);
 			Assert.IsTrue(input.SequenceEqual(expectedOutput));
 		}
+
+		[TestMethod]
+		public void Test_MergeSort_OneElement()
+		{
+			int[] input = { 9 };
+			int[] expectedOutput = { 9 };
+			Sorter<int>.MergeSort(ref input);
+			Assert.IsTrue(input.SequenceEqual(expectedOutput));
+		}
+
+		[TestMethod]
+		public void Test_MergeSort_TwoElements()
+		{
+			int[] input = { 8, 5 };
+			int[] expectedOutput = { 5, 8 };
+			Sorter<int>.MergeSort(ref input);
+			Assert.IsTrue(input.SequenceEqual(expectedOutput));
+		}
+
+		[TestMethod]
+		public void Test_MergeSort_NullCollection()
+		{
+			int[] input = { };
+			int[] expectedOutput = { };
+			Sorter<int>.MergeSort(ref input);
+			Assert.IsTrue(input.SequenceEqual(expectedOutput));
+		}
+
+		[TestMethod]
+		public void Test_MergeSort_DuplicateElements()
+		{
+			int[] input = { 0, 1, 0, 1, 0, 1, 0, 1};
+			int[] expectedOutput = { 0, 0, 0, 0, 1, 1, 1, 1};
+			Sorter<int>.MergeSort(ref input);
+			Assert.IsTrue(input.SequenceEqual(expectedOutput));
+		}
+
 	}
 }
 

@@ -161,9 +161,9 @@ namespace SortingLibrary
 		public static void QuickSort(T[] arr, int partitionStart, int partitionEnd)
 		{
 			// End result of the first QuickSort should proceed as follows:
-			// { 8, 5, 7, 6, 1, 4, 2, 3} correct
+			// { 8, 5, 7, 6, 1, 4, 2, 3}
 			//   ^        ^           ^
-			// { 3, 5, 7, 6, 1, 4, 2, 8} correct
+			// { 3, 5, 7, 6, 1, 4, 2, 8}
 			//   ^        ^           ^
 			// { 3, 5, 7, 6, 1, 4, 2, 8}
 			//         ^  ^        ^
@@ -171,10 +171,30 @@ namespace SortingLibrary
 			//         ^  ^        ^
 			// { 3, 5, 2, 6, 1, 4, 7, 8}
 			//            ^     ^
+			// When the pivot value first moves,
+			// we know that every value less than the pivot at new index is to the left
+			// and greater than is to the right
 			// { 3, 5, 2, 4, 1, 6, 7, 8}
-			//            ^     ^
+			//            ^  ^
+			// { 3, 5, 2, 1, 4, 6, 7, 8}
 
-			int pivotIndex = ChoosePivot(arr, partitionStart, partitionEnd);
+			// { 3, 48, 17, 30, 12, 9 }
+			//   ^       ^          ^
+			// { 3, 48, 9, 30, 12, 17 }
+			//   ^      ^           ^
+			// { 3, 48, 9, 30, 12, 17 }
+			//       ^  ^           ^
+			// { 3, (9), 48, 30, 12, 17 }
+			//       ^    ^           ^
+
+			// If only one element, return. It is sorted
+			if (partitionEnd - partitionStart < 1)
+			{
+				return;
+			}
+
+			int pivotIndex = ChoosePivot(arr, partitionStart, partitionEnd); // pivotIndex = 6
+			int newPivotIndex = -1;
 			int currentRightIndex = partitionEnd;
 			bool swapLeftMade = false;
 
@@ -199,42 +219,99 @@ namespace SortingLibrary
 					if (!swapRightMade)
 					{
 						// Swap left side with pivot if no right element satifies the condition
-						Swap(arr, i, pivotIndex);
+						// consider a for loop here to iterate through all elements left of the pivot
+						for (int j = partitionStart; j < pivotIndex; j++)
+						{
+							if (arr[j].CompareTo(arr[pivotIndex]) > 0)
+							{
+								Swap(arr, j, pivotIndex);
+								if (newPivotIndex == -1)
+								{
+									newPivotIndex = j;
+								}
+							}
+						}
 
 					}
 				}
 
 			} // end of for loop
-			// check to ensure that:
-			// we have a right element less than the pivot, but no left elements greater than the pivot
+			  // check to ensure that:
+			  // we have a right element less than the pivot, but no left elements greater than the pivot
 			if (!swapLeftMade)
 			{
-				for (int j = currentRightIndex; j > pivotIndex; j--) // Elements after pivot
+				for (int j = partitionEnd; j > pivotIndex; j--) // Elements after pivot
 				{
 					if (arr[j].CompareTo(arr[pivotIndex]) < 0)
 					{
 						Swap(arr, pivotIndex, j);
+						if (newPivotIndex == -1)
+						{
+							newPivotIndex = j;
+						}
 					}
 				}
 			}
 
-			if (partitionEnd - partitionStart <= 1)
+			// Check if the pivotIndex has changed
+			if (newPivotIndex == -1)
 			{
-				return;
+				// QuickSort the left of the pivot
+				QuickSort(arr, partitionStart, pivotIndex - 1);
+				// Quicksort the right of the pivot
+				QuickSort(arr, pivotIndex + 1, partitionEnd);
 			}
-
-			// QuickSort the left of the pivot
-			QuickSort(arr, partitionStart, pivotIndex - 1);
-			// Quicksort the right of the pivot
-			QuickSort(arr, pivotIndex + 1, partitionEnd);
-
-			Console.WriteLine(arr);
+			else // use newPivotIndex
+			{
+				// QuickSort the left of the pivot
+				QuickSort(arr, partitionStart, newPivotIndex - 1);
+				// Quicksort the right of the pivot
+				QuickSort(arr, newPivotIndex + 1, partitionEnd);
+			}
 		}
 
 		// ChoosePivot should not cause any issues. Problems are likely due to QuickSort
 		public static int ChoosePivot(T[] arr, int partitionStart, int partitionEnd)
-		{
-			int middleElementIndex = partitionEnd / 2;
+		{ // 0, 3
+			int middleElementIndex;
+
+/*			
+			if (partitionStart + 2 == partitionEnd)
+			{
+				middleElementIndex = partitionStart + 1;
+			}
+			else
+			{
+				middleElementIndex = (partitionEnd - partitionStart) / 2 + partitionStart;
+			}
+*/
+
+			if ((((partitionEnd - partitionStart) / 2 + partitionStart) % 2) == 1)
+			{
+				middleElementIndex = (partitionEnd - partitionStart) / 2 + partitionStart + 1;
+			}
+			else
+			{
+				middleElementIndex = (partitionEnd - partitionStart) / 2 + partitionStart;
+			}
+
+/*			if (partitionStart == 0)
+			{
+				if (partitionStart + 2 == partitionEnd)
+				{
+					middleElementIndex = partitionStart + 1;
+				}
+				else
+				{
+					middleElementIndex = partitionEnd / 2;
+				}
+			}
+			else
+			{
+				middleElementIndex = (partitionEnd - partitionStart) / 2 + partitionStart;
+			}
+*/
+
 			int firstElementIndex = partitionStart;
 			int lastElementIndex = partitionEnd;
 			T maxValue;
@@ -281,7 +358,8 @@ namespace SortingLibrary
 					minValue = arr[middleElementIndex];
 					destinedPivotValue = arr[firstElementIndex];
 				}
-			} else if (maxValue.Equals(arr[middleElementIndex]))
+			}
+			else if (maxValue.Equals(arr[middleElementIndex]))
 			{
 				if (arr[firstElementIndex].CompareTo(arr[lastElementIndex]) < 0)
 				{
@@ -294,7 +372,7 @@ namespace SortingLibrary
 					destinedPivotValue = arr[firstElementIndex];
 				}
 			}
-			else 
+			else
 			{
 				if (arr[middleElementIndex].CompareTo(arr[lastElementIndex]) < 0)
 				{
@@ -308,21 +386,34 @@ namespace SortingLibrary
 				}
 			}
 
-			arr[firstElementIndex] = minValue;
+
 			arr[lastElementIndex] = maxValue;
-			arr[middleElementIndex] = destinedPivotValue;
+			arr[firstElementIndex] = minValue;
+			if (partitionStart == middleElementIndex)
+			{
+				arr[middleElementIndex] = arr[firstElementIndex];
+			}
+            else
+            {
+				arr[middleElementIndex] = destinedPivotValue;
+            }
 			return middleElementIndex;
 		}
 
 		public static void MergeSort(ref T[] arr)
-		{ 
+		{
 			// { 3, 2, 1 }
 			// { (3), 2, 1 }
 			// { 3 }, { 2, 1 }
 			// { 3 }, { 2 }, { 1 }
 			// { 3 }, { 1, 2 }
 			// { 1, 2, 3 }
-			
+
+			if (arr == null)
+			{
+				return;
+			}
+
 			if (arr.Length > 1)
 			{
 				int middleIndex = (arr.Length) / 2; // Don't subtract one from arr.Length! // 1
@@ -347,7 +438,7 @@ namespace SortingLibrary
 				arr = Merge(firstHalf, secondHalf);
 			}
 			else
-			{ 
+			{
 				// errors on 8th continue
 				// I don't think we are merging the pieces back together
 				// Actually, it appears that the values aren't sorted at all, how?
