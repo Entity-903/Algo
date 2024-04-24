@@ -174,9 +174,9 @@ namespace SortingLibrary
 			// When the pivot value first moves,
 			// we know that every value less than the pivot at new index is to the left
 			// and greater than is to the right
-			// { 3, 5, 2, 4, 1, 6, 7, 8}
+			// { 3, 5, 2, 4, 1, (6), 7, 8}
 			//            ^  ^
-			// { 3, 5, 2, 1, 4, 6, 7, 8}
+			// { 3, 5, 2, 1, 4, (6), 7, 8}
 
 			// { 3, 48, 17, 30, 12, 9 }
 			//   ^       ^          ^
@@ -272,45 +272,34 @@ namespace SortingLibrary
 
 		// ChoosePivot should not cause any issues. Problems are likely due to QuickSort
 		public static int ChoosePivot(T[] arr, int partitionStart, int partitionEnd)
-		{ // 0, 3
+		{
+			// 1, 2, 3
+			// 0, 1, 2
+			//    ^
+			// 1, 2, 3, 4, 5
+			// 0, 1, 2, 3, 4
+			//       ^
+			// 1, 2, 3, 4, 5, 6, 7
+			// 0, 1, 2, 3, 4, 5, 6
+			//          ^
+			// 4, 5, 6
+			// 3, 4, 5
+			//    ^
+			// 
 			int middleElementIndex;
 
-/*			
-			if (partitionStart + 2 == partitionEnd)
-			{
-				middleElementIndex = partitionStart + 1;
-			}
-			else
-			{
-				middleElementIndex = (partitionEnd - partitionStart) / 2 + partitionStart;
-			}
-*/
+			// partitionStart = 5
+			// partitionEnd = 6
 
-			if ((((partitionEnd - partitionStart) / 2 + partitionStart) % 2) == 1)
+			int tempValue = partitionEnd - partitionStart; // 1
+			if (tempValue % 2 == 0)
 			{
-				middleElementIndex = (partitionEnd - partitionStart) / 2 + partitionStart + 1;
+				middleElementIndex = (tempValue) / 2 + partitionStart;
 			}
 			else
 			{
-				middleElementIndex = (partitionEnd - partitionStart) / 2 + partitionStart;
+				middleElementIndex = (tempValue) / 2 + partitionStart + 1;
 			}
-
-/*			if (partitionStart == 0)
-			{
-				if (partitionStart + 2 == partitionEnd)
-				{
-					middleElementIndex = partitionStart + 1;
-				}
-				else
-				{
-					middleElementIndex = partitionEnd / 2;
-				}
-			}
-			else
-			{
-				middleElementIndex = (partitionEnd - partitionStart) / 2 + partitionStart;
-			}
-*/
 
 			int firstElementIndex = partitionStart;
 			int lastElementIndex = partitionEnd;
@@ -341,9 +330,6 @@ namespace SortingLibrary
 					maxValue = arr[lastElementIndex];
 				}
 			}
-
-			// int[] numbers = { 8, 5, 7, 6, 1, 4, 2, 3};
-			//                   ^        ^           ^
 
 			// find minValue and destinedPivotValue excluding maxValue
 			if (maxValue.Equals(arr[lastElementIndex]))
@@ -387,15 +373,33 @@ namespace SortingLibrary
 			}
 
 
+			// maxValue = 9
+			// minValue = 1
+			// lastElementIndex = 1
+			// firstElementIndex = 0
+			// middleElementIndex = partitionEnd
+
+			// arr[lastElementIndex] = maxValue;
+			// arr[firstElementIndex] = minValue;
+			// arr[middleElementIndex] = destinedPivotValue;
+
 			arr[lastElementIndex] = maxValue;
 			arr[firstElementIndex] = minValue;
-			if (partitionStart == middleElementIndex)
+
+			if (middleElementIndex == partitionStart)
 			{
 				arr[middleElementIndex] = arr[firstElementIndex];
 			}
             else
             {
-				arr[middleElementIndex] = destinedPivotValue;
+				if (middleElementIndex == partitionEnd)
+				{
+					arr[middleElementIndex] = arr[lastElementIndex];
+				}
+				else
+				{
+					arr[middleElementIndex] = destinedPivotValue;
+				}
             }
 			return middleElementIndex;
 		}

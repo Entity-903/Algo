@@ -341,6 +341,14 @@ namespace SortingLibraryTests
 			int[] expectedOutput = { 1, 2, 3, 4, 5, 6, 7, 8 }; // { 1, 2, 3, 4, 5, 6, 7, 8 } // { 3, 9, 12, 17, 30, 48 }
 			Sorter<int>.QuickSort(input, 0, input.Length - 1);
 			Assert.IsTrue(input.SequenceEqual(expectedOutput));
+			// 1, 2, 3, 6, 7, 4, 5, 8 without newPivotIndex
+			// 1, 2, 3, 5, 6, 4, 7, 8 with newPivotIndex (actively improves result)
+
+			// EXPECT: { 8, 5, 7, 6, 1, 4, 2, 3 }
+			// RETURN: { 1, 2, 3, 4, 5, 6, 7, 8 } CORRECT
+
+			// EXPECT: { 3, 9, 12, 17, 30, 48 }
+			// RETURN: { 3, 9, 12, 17, 30, 30 } I have plans for ChoosePivot... plans produced desired results!
 		}
 
 		[TestMethod,
