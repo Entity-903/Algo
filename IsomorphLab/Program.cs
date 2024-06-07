@@ -18,10 +18,10 @@ namespace IsomorphLab
             string output = "";
             try
             {
-                string encryption = File.ReadAllText(path);
-                //string[] lines = File.ReadAllLines(path);
-                //output = IsomorphGenerator.CreateIsomorphs(lines); 
-                output = IsomorphGenerator.GenerateIsomorphicCipher(encryption);
+                //string encryption = File.ReadAllText(path);
+                string[] lines = File.ReadAllLines(path);
+                output = IsomorphGenerator.CreateIsomorphs(lines); 
+                //output = IsomorphGenerator.GenerateIsomorphicCipher(encryption);
 			}
             catch (Exception ex)
             {

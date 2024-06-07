@@ -108,7 +108,7 @@ namespace SortingLibraryTests
 			input = null
 			sort(input)
 		*/
-		[TestMethod, 
+		[TestMethod,
 		ExpectedException(typeof(NullReferenceException))]
 		public void Test_BubbleSort_NullCollection()
 		{
@@ -142,7 +142,7 @@ namespace SortingLibraryTests
 				indexB = 4
 				swap(array, indexA, indexB)
 		*/
-		[TestMethod, 
+		[TestMethod,
 		ExpectedException(typeof(IndexOutOfRangeException))]
 		public void Test_Swap_OutOfBounds()
 		{
@@ -160,7 +160,7 @@ namespace SortingLibraryTests
 			Sorter<int>.BubbleSort(numbers);
 			Assert.IsTrue(numbers.SequenceEqual(expectedNumbers));
 		}
-//------------------------------------------------
+		//------------------------------------------------
 		[TestMethod]
 		public void Test_InsertionSort_HappyPath()
 		{
@@ -346,7 +346,7 @@ namespace SortingLibraryTests
 
 			// EXPECT: { 8, 5, 7, 6, 1, 4, 2, 3 }
 			// RETURN: { 1, 2, 3, 4, 5, 6, 7, 8 } CORRECT
-
+			
 			// EXPECT: { 3, 9, 12, 17, 30, 48 }
 			// RETURN: { 3, 9, 12, 17, 30, 30 } I have plans for ChoosePivot... plans produced desired results!
 		}
@@ -385,7 +385,7 @@ namespace SortingLibraryTests
 			Sorter<int>.QuickSort(input, 0, input.Length - 1);
 			Assert.IsTrue(input.SequenceEqual(expectedOutput));
 		}
-
+		//------------------------------------------------
 		[TestMethod]
 		public void Test_MergeSort_HappyPath()
 		{
@@ -425,12 +425,36 @@ namespace SortingLibraryTests
 		[TestMethod]
 		public void Test_MergeSort_DuplicateElements()
 		{
-			int[] input = { 0, 1, 0, 1, 0, 1, 0, 1};
-			int[] expectedOutput = { 0, 0, 0, 0, 1, 1, 1, 1};
+			int[] input = { 0, 1, 0, 1, 0, 1, 0, 1 };
+			int[] expectedOutput = { 0, 0, 0, 0, 1, 1, 1, 1 };
 			Sorter<int>.MergeSort(ref input);
 			Assert.IsTrue(input.SequenceEqual(expectedOutput));
 		}
-
+		//------------------------------------------------
+		[TestMethod]
+		public void Test_nQueens_HappyPath()
+		{
+			// In its current state, it does not increment currentSolution
+			// Solve_nQueens should not finish this quickly
+			// It never finds any solutions
+			// n can equal 20 and it will return 0 solutions
+			// Turns out the recursive function is, in fact, not recursive.
+			// Now it appears to be infinitely looping
+			int n = 4; // 9
+			int result = Sorter<int>.Create_nQueens(n);
+			int expectedOutput = 2; // 352
+			Assert.AreEqual(result, expectedOutput);
+			// 1, 1
+			// 4, 2
+			// 9, 352
+		}
+		[TestMethod]
+		public void Test_GetLength_Function()
+		{
+			bool[,] board = new bool[4, 40];
+			int expectedLength = 4;
+			Assert.AreEqual(board.GetLength(0), expectedLength);
+		}
 	}
 }
 

@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 using System.Xml.Linq;
 using System.Reflection;
-
+using System.Runtime.InteropServices;
+using System.Numerics;
 
 namespace SortingLibrary
 {
 	public class Sorter<T> where T : IComparable<T>
 	{
+		static int functionCallTracker = 0;
 		/* 
 		 * Arranges numerical elements in a collection from least to greatest
 		Until nothing has changed
@@ -270,7 +272,6 @@ namespace SortingLibrary
 			}
 		}
 
-		// ChoosePivot should not cause any issues. Problems are likely due to QuickSort
 		public static int ChoosePivot(T[] arr, int partitionStart, int partitionEnd)
 		{
 			// 1, 2, 3
@@ -371,17 +372,6 @@ namespace SortingLibrary
 					destinedPivotValue = arr[middleElementIndex];
 				}
 			}
-
-
-			// maxValue = 9
-			// minValue = 1
-			// lastElementIndex = 1
-			// firstElementIndex = 0
-			// middleElementIndex = partitionEnd
-
-			// arr[lastElementIndex] = maxValue;
-			// arr[firstElementIndex] = minValue;
-			// arr[middleElementIndex] = destinedPivotValue;
 
 			arr[lastElementIndex] = maxValue;
 			arr[firstElementIndex] = minValue;
@@ -494,6 +484,179 @@ namespace SortingLibrary
 				}
 			}
 			return mergedCollection;
+		}
+
+		// nQueens was made to return an int so we could compare the total number of results for testing
+		public static int Create_nQueens(int n)
+		{
+			bool[,] board = new bool[n, n];
+			int row = 0;
+			// Ensures we are not reinitializing allSolutions every time Solve_nQueens is called
+			StringBuilder allSolutions = new StringBuilder();
+			return Solve_nQueens(board, row, 0, allSolutions);
+		}
+
+		static int currentSolution = 1;
+
+		public static int Solve_nQueens(bool[,] board, int row, int currentColumn, StringBuilder allSolutions)
+		{
+			functionCallTracker++;
+			Console.WriteLine("Solve_nQueens was called " + functionCallTracker + " time(s)");
+
+			if (board.GetLength(0) >= 0 && board.GetLength(0) <= 3)
+			{
+				if (board.GetLength(0) == 1)
+				{
+					// returns currentSolution - 1 as the total number of solutions calculated
+					currentSolution++;
+					allSolutions.Append("1\n\nQ"); // ("Solution #1\n\nQ")
+					Console.WriteLine(allSolutions);
+				}
+                else
+                {
+					allSolutions.Append("No Solutions");
+					Console.WriteLine(allSolutions);
+				}
+            }
+			else
+			{
+				// Checks elements in row
+				for (int i = currentColumn; i < board.GetLength(0); i++)
+				{
+					// if location is legal
+					if (CalculateLegality(board, row, i))
+					{
+						// Places a queen at the location
+						board[row, i] = true;
+						// If solution found
+						if (row == board.GetLength(0) - 1) // At this breakpoint, 0 -> 2 -> 2 -> ends
+						{
+							allSolutions.Append("Solution #" + currentSolution + "\n\n");
+
+							// Code to include new lines for user readability
+							for (int x = 0; x < board.GetLength(0); x++)
+							{
+								for (int y = 0; y < board.GetLength(1); y++)
+								{
+									allSolutions.Append(board[x,y] + " ");
+								}
+
+								allSolutions.AppendLine();
+								// If last row of board, add another new line
+								if (x < board.GetLength(0) - 1)
+								{
+									allSolutions.AppendLine();
+								}
+
+							}
+							currentSolution++;
+						}
+						else
+						{
+							row++;
+							Solve_nQueens(board, row, 0, allSolutions);
+						}
+					}
+				} // No valid elements were found in row
+
+				int previousApprovedElement = 0;
+				int previousRow = row - 1;
+				// If is not first row
+				if (row != 0)
+				{
+					for (int z = 0; z < board.GetLength(0); z++)
+					{
+						if (board[previousRow, z] == true)
+						{
+							board[previousRow, z] = false;
+							previousApprovedElement = z;
+							break;
+						}
+					}
+					// We want to check the next element that was not checked, so we check the element after the previously approved element
+					Solve_nQueens(board, previousRow, previousApprovedElement + 1, allSolutions);
+				}
+			}
+
+			// All solutions should be found and appended to the StringBuilder by the time we reach this point
+			bool allowConversion = true;
+			for (int i = 0; i < allSolutions.Length; i++)
+			{
+				if (allSolutions[i] == '#')
+				{
+					allowConversion = false;
+				}
+				if (allSolutions[i] == '\n')
+				{
+					allowConversion = true;
+				}
+				if (allSolutions[i] == '0' && allowConversion == true)
+				{
+					allSolutions[i] = '-';
+				}
+				if (allSolutions[i] == '1' && allowConversion == true)
+				{
+					allSolutions[i] = 'Q';
+				}
+			}
+			Console.WriteLine(allSolutions.ToString());
+			return currentSolution - 1;
+
+			/*				
+ *				The statement "No solution has queens on any corner of the board" is false
+ 				// No solution has queens on the corners of the board
+				// (proven false)
+				if (row == 0 || row == board.GetLength(0) - 1)
+				{
+					// Excludes corners
+					for (int i = 1; i < board.GetLength(0) - 1; i++)
+					{
+						if (CalculateLegality(board, row, i))
+						{
+							board[row, i] = true;
+							if (row == board.GetLength(0) - 1)
+							{
+								allSolutions.Append("Solution #" + currentSolution + "\n\n");
+								allSolutions.Append(board);
+								currentSolution++;
+							}
+							row++;
+							Solve_nQueens(board, row);
+						}
+					}
+				}
+
+ */
+		}
+
+		public static bool CalculateLegality(bool[,] board, int targetRow, int targetColumn)
+		{
+			for (int i = 1; i <= targetRow; i++)
+			{
+				// Check above diagonal elements
+				if (targetColumn - i >= 0)
+				{
+					if (board[targetRow - i, targetColumn - i] == true)
+					{
+						return false;
+					}
+				}
+				if (targetColumn + i < board.GetLength(0))
+				{
+					if (board[targetRow - i, targetColumn + i] == true)
+					{
+						return false;
+					}
+				}
+
+				// Check above vertical elements
+				if (board[targetRow - i, targetColumn] == true)
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 	}
 }

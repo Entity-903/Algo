@@ -1,28 +1,13 @@
-Key = The quick brown fox jumps over the lazy dog
+Exact Isomorphs:
+0 1 0: gag yay tot 
+0 1 1: egg add foo 
+0 1 2: sap ate bar eat fit 
+0 1 1 2: look meet took seer seep 
 
-T = 1
-H = 2
-E = 3
-Q = 4
-U = 5
-I = 6
-C = 7
-K = 8
-B = 9
-R = 10
-O = 11
-W = 12
-N = 13
-F = 14
-X = 15
-J = 16
-M = 17
-P = 18
-S = 19
-V = 20
-L = 21
-A = 22
-Z = 23
-Y = 24
-D = 25
-G = 26
+Loose Isomorphs:
+1 2 : gag egg add foo yay tot 
+1 1 1 : sap ate bar eat fit 
+1 1 2 : look meet took seer seep 
+
+
+Non Isomorphs: aaa fear mates 
